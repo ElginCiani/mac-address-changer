@@ -28,21 +28,21 @@ def parse_args():
     This can be helpful for staying anonymous, impersonating other
     devices, or bypassing filters.
 
-    run with: 'python3 mac_changer.py [options]'
+    run with: '{Python Path} mac_changer.py [options]'
     Required flags: --interface and address specification (-a, -r, or -p)\n\n
     Tool created by: Elgin Ciani
     """,
-    version="%prog 2.5")
+    version="%prog 2.6")
 
   #Available command line arguments
   parser.add_option("-i", "--interface", dest="interface", help="Interface to change MAC address. e.g: eth0, wlan0")
   parser.add_option("-a", "--address", dest="address", help="New MAC address in the form 11:22:33:44:55:66")
   parser.add_option("-r", "--random", action="store_true", default=False, help="Generates a random new hexadecimal MAC address.")
-  parser.add_option("-R", "--restore-permanent-address", action="store_true", default=False, dest="restore", help="Restores original MAC address for given interface.")
-  parser.add_option("-P", "--print-permanent-address", action="store_true", default=False, dest="printorig", help="Prints original MAC address for given interface.")
-  parser.add_option("-p", "--print-current-address", action="store_true", default=False, dest="printcurr", help="Prints current MAC address for given interface.")
-  parser.add_option("-v", "--verbose", action="store_true", default=False, dest="verbose", help="Print ifconfig info for given interface before and after changing address.")
-  parser.add_option("-q", "--quiet", action="store_true", default=False, dest="quiet", help="Enable this flag to turn off any print logging.")
+  parser.add_option("-R", "--restore-permanent-address", dest="restore", action="store_true", default=False, help="Restores original MAC address for given interface.")
+  parser.add_option("-P", "--print-permanent-address", dest="printorig", action="store_true", default=False, help="Prints original MAC address for given interface.")
+  parser.add_option("-p", "--print-current-address", dest="printcurr", action="store_true", default=False, help="Prints current MAC address for given interface.")
+  parser.add_option("-v", "--verbose", dest="verbose", action="store_true", default=False, help="Print ifconfig info for given interface before and after changing address.")
+  parser.add_option("-q", "--quiet", dest="quiet", action="store_true", default=False, help="Enable this flag to turn off any print logging.")
   
   global options
   (options, arguments) = parser.parse_args()
@@ -54,8 +54,10 @@ def parse_args():
     parser.error("[-] Specify a new mac address (or use --random or -p). See --help for more info.")
   elif options.address and (options.random or options.restore):
     parser.error("[-] Do not specify address and set -r or -p flags simultaneously.")
-  elif options.restore and options.random:
-    parser.error("[-] Do not set -r and -p flags simultaneously.")
+  elif options.random and options.restore:
+    parser.error("[-] Do not set -r and -R flags simultaneously.")
+  elif options.quiet and options.verbose:
+    parser.error("[-] Do not set --quiet and --verbose flags simultaneously.")
   ## End: Error scenarios ##
   elif options.printcurr:
     currmac = get_curr_mac(options.interface)
