@@ -93,29 +93,33 @@ def get_curr_mac(interface):
 
 
 ########## MAIN ##########
-options = parse_args() #Option parser
+def main():
+  options = parse_args() #Option parser
 
-currmac = get_curr_mac(options.interface)
+  currmac = get_curr_mac(options.interface)
 
-if not options.quiet and not options.verbose:
-  print("Current MAC = " + str(currmac))
+  if not options.quiet and not options.verbose:
+    print("Current MAC = " + str(currmac))
 
-if options.verbose:
-  print("*"*20, "Before Update Info", "*"*20)
-  print()
-  print_info(options.interface)
+  if options.verbose:
+    print("*"*20, "Before Update Info", "*"*20)
+    print()
+    print_info(options.interface)
 
-change_mac(options.interface, options.address) #Change mac address
-currmac = get_curr_mac(options.interface) #Update current mac address
+  change_mac(options.interface, options.address) #Change mac address
+  currmac = get_curr_mac(options.interface) #Update current mac address
 
-if options.verbose:
-  print("*"*20, "After Update Info", "*"*20)
-  print()
-  print_info(options.interface)
+  if options.verbose:
+    print("*"*20, "After Update Info", "*"*20)
+    print()
+    print_info(options.interface)
 
-if not options.quiet:
-  if currmac == options.address:
-    print("[+] MAC address changed successfully.")
-  else:
-    print("[-] MAC address change failed.")
+  if not options.quiet:
+    if currmac == options.address:
+      print("[+] MAC address changed successfully.")
+    else:
+      print("[-] MAC address change failed.")
 ########## END MAIN ##########
+
+if __name__ == '__main__':
+  main()
